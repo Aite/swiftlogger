@@ -57,7 +57,11 @@ class Log {
         return false
         #endif
     }
-    
+
+    private static let logDate = true
+    private static let logColumn = false
+    private static let logFunctionName = false
+
     // MARK: - Loging methods
 
     /// Logs messages on console with a prefix according to the logEvent parameter
@@ -73,7 +77,22 @@ class Log {
         guard isLoggingEnabled else {
             return
         }
-        print("\(Date().toString()) \(logEvent.rawValue)[\(sourceFileName(filePath: filename))]:\(line) \(column) \(funcName) -> \(object)")
+        var formattedString = ""
+        if logDate {
+            formattedString += "\(Date().toString()) "
+        }
+
+        formattedString += "\(logEvent.rawValue)[\(sourceFileName(filePath: filename))]:\(line)"
+
+        if logColumn {
+            formattedString += " \(column)"
+        }
+        if logFunctionName {
+            formattedString += " \(funcName)"
+        }
+        formattedString += " -> \(object)"
+
+        print(formattedString)
     }
 
     /// Logs error messages on console with prefix [‼️]
